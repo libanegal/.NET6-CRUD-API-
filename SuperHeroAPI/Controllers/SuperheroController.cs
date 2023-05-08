@@ -49,8 +49,19 @@ namespace SuperHeroAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<List<Superhero>>> AddHero(Superhero hero)
         {
+            var hero1 = heroes.Find(h => h.Id == hero.Id);
+
+            if (hero1 != null)
+            {
+                return BadRequest("Record with the same Id Already Exists");
+                    
+            }
+
+
             heroes.Add(hero);
             return Ok(heroes);
+
+
 
         }
 
@@ -62,13 +73,33 @@ namespace SuperHeroAPI.Controllers
             {
                 return BadRequest("Request not found");
             }
-            heroes.Add(hero);
-            return Ok(heroes);
-
             hero.Name = request.Name;
             hero.FirstName = request.FirstName;
-            hero.LastName = request.FirstName;
+            hero.LastName = request.LastName;
             hero.Place = request.Place;
+
+            
+            return Ok(heroes);
+
+           
+
+        }
+
+
+        [HttpDelete("{id}")]
+
+        public async Task<ActionResult<List<Superhero>>> Delete(int id)
+        {
+
+            var hero = heroes.Find(h => h.Id == id);
+            if (hero == null)
+            {
+                return BadRequest("Request not found");
+
+            }
+            heroes.Remove(hero);
+            return Ok(heroes);
+
         }
     }
 }
